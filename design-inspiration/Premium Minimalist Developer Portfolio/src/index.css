@@ -1,0 +1,28 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  --color-background: #09090b;
+  --color-surface: #111113;
+  --color-card: #18181b;
+  --color-line: #27272a;
+  --color-ink: #fafafa;
+  --color-muted: #a1a1aa;
+  --color-brand: #6366f1;
+  --color-brand-blue: #3b82f6;
+  --radius-panel: 12px;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('https://static.figma.com/font/Inter_1') format('woff2');
+}
+
+:root { color-scheme: dark; }
+html { scroll-behavior: smooth; }
+body { background: #09090b; color: #fafafa; }
+::selection { background: #6366f1; color: #fff; }
