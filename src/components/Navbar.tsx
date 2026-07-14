@@ -23,8 +23,19 @@ export function Header() {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     const elementId = id.toLowerCase();
-    const element = document.getElementById(elementId);
     
+    if (elementId === 'projects') {
+      const element = document.getElementById('projects');
+      if (element) {
+        e.preventDefault();
+        element.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.location.hash = '#/projects';
+      }
+      return;
+    }
+
+    const element = document.getElementById(elementId);
     if (element) {
       e.preventDefault();
       element.scrollIntoView({ behavior: 'smooth' });

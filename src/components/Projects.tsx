@@ -1,44 +1,12 @@
-import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SectionHeading } from './SectionHeading';
 import { Tag } from './Tag';
 import { getProjects } from '../services/contentService';
-import Fuse from 'fuse.js';
-
-const filters = ['All work', 'Full stack', 'Frontend'];
+import { LinkButton } from './Button';
 
 export function Projects() {
-  const [filter, setFilter] = useState('All work');
-  const [search, setSearch] = useState('');
-  
-  const projects = getProjects();
-
-  // Initialize Fuse.js for client-side fuzzy search
-  const fuse = useMemo(() => {
-    return new Fuse(projects, {
-      keys: ['title', 'description', 'tags'],
-      threshold: 0.3,
-    });
-  }, [projects]);
-
-  // Combine category filtering and Fuse.js fuzzy search
-  const results = useMemo(() => {
-    let list = projects;
-
-    // Filter by type first
-    if (filter !== 'All work') {
-      list = list.filter((p) => p.type === filter);
-    }
-
-    // Apply Fuse.js fuzzy search if search query is present
-    if (search.trim() !== '') {
-      const searchResults = fuse.search(search);
-      const matchedSlugs = new Set(searchResults.map((r) => r.item.slug));
-      list = list.filter((p) => matchedSlugs.has(p.slug));
-    }
-
-    return list;
-  }, [filter, search, projects, fuse]);
+  // Show only 3 showcase projects on the homepage
+  const showcaseProjects = getProjects().slice(0, 3);
 
   return (
     <section id="projects" className="border-y border-line bg-surface">
@@ -48,50 +16,15 @@ export function Projects() {
           title="Useful work, made with care."
           description="A selection of product work across strategy, interface systems, and full-stack implementation."
           action={
-            <a
-              href="#/contact"
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="hidden text-sm text-muted hover:text-ink md:block"
-            >
-              Discuss a project <span className="text-brand">↗</span>
-            </a>
+            <Link to="/projects" className="hidden text-sm text-brand hover:underline md:block font-mono tracking-wider">
+              VIEW ALL PROJECTS <span className="text-xs">↗</span>
+            </Link>
           }
         />
 
-        {/* Filters & search */}
-        <div className="mt-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div className="flex flex-wrap gap-2">
-            {filters.map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`rounded-lg border px-3 py-1.5 text-xs transition-colors ${
-                  filter === f
-                    ? 'border-zinc-500 bg-card text-ink'
-                    : 'border-line text-muted hover:text-ink'
-                }`}
-              >
-                {f}
-              </button>
-            ))}
-          </div>
-          <label className="flex items-center gap-2 rounded-lg border border-line bg-background px-3 py-2 text-muted">
-            <span className="text-sm">⌕</span>
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search projects"
-              className="w-36 bg-transparent text-xs text-ink outline-none placeholder:text-zinc-600"
-            />
-          </label>
-        </div>
-
-        {/* Project grid */}
-        <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {results.map((p) => (
+        {/* Project showcase grid */}
+        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {showcaseProjects.map((p) => (
             <article
               key={p.title}
               className="group flex flex-col h-full overflow-hidden rounded-panel border border-line bg-card transition duration-300 hover:-translate-y-1 hover:border-zinc-600"
@@ -149,6 +82,13 @@ export function Projects() {
               </div>
             </article>
           ))}
+        </div>
+
+        {/* View All Projects Button - Mobile Fallback & Center Call To Action */}
+        <div className="mt-12 flex justify-center">
+          <LinkButton href="/projects" variant="secondary">
+            View all projects <span className="ml-1">↗</span>
+          </LinkButton>
         </div>
       </div>
     </section>
