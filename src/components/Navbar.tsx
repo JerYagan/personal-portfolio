@@ -21,11 +21,28 @@ function CloseIcon() {
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    const elementId = id.toLowerCase();
+    const element = document.getElementById(elementId);
+    
+    if (element) {
+      e.preventDefault();
+      element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // Fallback for subpages (e.g. Project Details): let the native hash navigation return to Home
+      window.location.hash = `#/${elementId}`;
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-background/95 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6 sm:px-8 lg:px-10">
         {/* Logo */}
-        <a href="#home" className="flex items-center gap-2 text-sm font-semibold tracking-[-0.02em]">
+        <a
+          href="#/"
+          onClick={(e) => handleNavClick(e, 'home')}
+          className="flex items-center gap-2 text-sm font-semibold tracking-[-0.02em]"
+        >
           <span className="grid size-6 place-items-center rounded-[7px] bg-ink text-xs font-bold text-background">P</span>
           PORTFOLIO.DEV
         </a>
@@ -35,7 +52,8 @@ export function Header() {
           {navItems.map((item) => (
             <a
               key={item}
-              href={`#${item.toLowerCase()}`}
+              href={`#/${item.toLowerCase()}`}
+              onClick={(e) => handleNavClick(e, item)}
               className="text-sm text-muted transition-colors hover:text-ink"
             >
               {item}
@@ -73,8 +91,11 @@ export function Header() {
             {navItems.map((item) => (
               <a
                 key={item}
-                href={`#${item.toLowerCase()}`}
-                onClick={() => setMobileOpen(false)}
+                href={`#/${item.toLowerCase()}`}
+                onClick={(e) => {
+                  setMobileOpen(false);
+                  handleNavClick(e, item);
+                }}
                 className="block rounded-lg px-3 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-card hover:text-ink"
               >
                 {item}

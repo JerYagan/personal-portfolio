@@ -48,7 +48,14 @@ export function Projects() {
           title="Useful work, made with care."
           description="A selection of product work across strategy, interface systems, and full-stack implementation."
           action={
-            <a href="#contact" className="hidden text-sm text-muted hover:text-ink md:block">
+            <a
+              href="#/contact"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="hidden text-sm text-muted hover:text-ink md:block"
+            >
               Discuss a project <span className="text-brand">↗</span>
             </a>
           }
@@ -131,9 +138,13 @@ export function Projects() {
                   <Link to={`/projects/${p.slug}`} className="hover:text-brand">
                     Case study ↗
                   </Link>
-                  <a href="#contact" className="text-muted hover:text-ink">
-                    GitHub ↗
-                  </a>
+                  {p.github ? (
+                    <a href={p.github} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-ink">
+                      GitHub ↗
+                    </a>
+                  ) : (
+                    <span className="text-zinc-600">No Repo</span>
+                  )}
                 </div>
               </div>
             </article>
